@@ -1,66 +1,94 @@
 # SISTEMA // SUR - Red Comunista Digital
 
-*Proyecto personal de formación política marxista-leninista con estética cyberpunk*
+*Plataforma de formación política marxista-leninista*
 
-## Descripción
+## Módulos de Contenido
 
-Plataforma web interactiva para difundir teoría marxista-leninista (Marx-Lenin-Stalin) con diseño futurista/cyberpunk. Sin contenido trotskista.
-
-## Estructura
-
-```
-sistema-sur/
-├── index.html      # Aplicación completa (HTML + CSS + JS)
-└── README.md       # Este archivo
-```
-
-## Contenido
-
-### Módulo 1: Karl Marx (El Kernel)
+### Módulo 1: Karl Marx
 - Materialismo Dialéctico
-- Plusvalía
 - Materialismo Histórico
+- Plusvalía
 - Fetichismo de la Mercancía
+- Lucha de Clases
+- Alienación
 
-### Módulo 2: Lenin (La Implementación)
-- Imperialismo (fase superior del capitalismo)
+### Módulo 2: Friedrich Engels
+- El Origen de la Familia
+- Dialéctica de la Naturaleza
+- Sobre el Papel del Trabajo
+
+### Módulo 3: Vladimir Lenin
+- ¿Qué Hacer?
+- Imperialismo
 - Estado y Revolución
 - Partido de Vanguardia
-- ¿Qué Hacer?
+- Terrorismo y Comunismo
+- La Infancia de la Enfermedad
 
-### Módulo 3: Stalin (La Consolidación)
+### Módulo 4: Stalin
+- Fundamentos del Leninismo
 - Socialismo en un Solo País
-- Construcción del Socialismo
 - Cuestión Nacional
+- Problemas Económicos del Socialismo
 
-### Módulo 4: PC Chile
-- Luis E. Recabarren (fundador)
-- Baltazar Galleguillos (líder sindical)
-- Luis Corvalán (secretario general)
-- Volodia Teitelboim (intelectual)
+### Módulo 5: Antonio Gramsci
+- Hegemonía
+- Cuadernos de la Cárcel
+- Intelectuales Orgánicos
+- Guerra de Posiciones
 
-### Archivo Histórico Chile
-- Frente Popular (1938)
-- Unidad Popular (1970)
-- Golpe (1973)
-- Resistencia
+### Módulo 6: PC Chile - Fundadores
+- Luis E. Recabarren
+- Baltasar Galleguillos
+- Juan Vargas Puebla
+- Carlos Labbé
+- Elías Lafertte
+
+### Módulo 7: PC Chile - Dirigentes Históricos
+- Luis Corvalán
+- Volodia Teitelboim
 - Gladys Marín
-- Víctor Jara
-- Revuelta 2019
+- Jorge Insunza
+- Roberto Navarrete
+- René Orellana
+
+### Módulo 8: PC Chile - Contemporáneos
+- Guillermo Teillier
+- Lautaro Carmona
+- Karol Cariola
+- Boris Barrera
+- Miguel Gutiérrez
+
+### Módulo 9: Historia de Chile
+- Movimiento Obrero (1900-1925)
+- Frentes Populares (1936-1946)
+- Gobierno de Ibáñez
+- Unitad Popular (1970-1973)
+- Golpe y Resistencia (1973-1990)
+- Transición y Consolidação (1990-2010)
+--cycle Movements (2011-presente)
+
+### Módulo 10: Archivo de Lucha
+- Huelga del Salitre (1907)
+- Matanza del Santa María (1907)
+- Creación del PC (1922)
+- Levantamiento del 4 de Septiempre (1946)
+- Caravana de la Muerte (1973)
+- Casodegüen (1984)
+- Revuelta Social (2019)
+
+## Recursos Adicionales
+- PDF de textos clássicos
+- Audio de discursos históricos
+- Videos de análisis
+- Bibliografía recomendada
 
 ## Tecnologías
-
-| Componente | Uso |
-|------------|-----|
-| Tailwind CSS | Estilos |
-| Phosphor Icons | Iconografía |
-| Google Fonts | Orbitron, Rajdhani, Share Tech Mono |
-| Canvas API | Partículas |
-
-## Personalización
-
-Para modificar contenido, editar el objeto `db` en la sección `<script>` del HTML.
+- HTML5 + Tailwind CSS
+- Phosphor Icons
+- Google Fonts
+- Canvas API (partículas)
+- Local Storage (progreso de usuario)
 
 ## Licencia
-
-Proyecto personal - Código abierto para uso educativo
+Código abierto - Sin derechos reservados
