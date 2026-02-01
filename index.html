@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SISTEMA // SUR - Red Comunista Digital</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <style>
+        :root {
+            --bg-space: #05070a;
+            --panel-bg: rgba(10, 15, 25, 0.8);
+            --neon-blue: #00f2ff;
+            --neon-red: #ff003c;
+            --neon-gold: #ffbf00;
+            --neon-green: #00ff9d;
+            --hex-grid: rgba(0, 242, 255, 0.05);
+        }
+        body {
+            background-color: var(--bg-space);
+            color: #fff;
+            font-family: 'Rajdhani', sans-serif;
+            overflow-x: hidden;
+            background-image: radial-gradient(circle at 50% 50%, #0a1525 0%, transparent 60%), linear-gradient(var(--hex-grid) 1px, transparent 1px), linear-gradient(90deg, var(--hex-grid) 1px, transparent 1px);
+            background-size: 100% 100%, 40px 40px, 40px 40px;
+        }
+        .font-cyber { font-family: 'Orbitron', sans-serif; }
+        .font-data { font-family: 'Share Tech Mono', monospace; }
+        .hex-container {
+            width: 90px;
+            height: 100px;
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+            background: linear-gradient(180deg, rgba(0,242,255,0.1), rgba(0,242,255,0.05));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            transition: all 0.3s ease;
+            border: 1px solid var(--neon-blue);
+        }
+        .hex-container::before {
+            content: '';
+            position: absolute;
+            inset: 1px;
+            background: var(--bg-space);
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+            z-index: -1;
+        }
+        .hex-container:hover {
+            transform: scale(1.1);
+            background: var(--neon-blue);
+            box-shadow: 0 0 20px var(--neon-blue);
+        }
+        .hex-container.virus:hover { background: var(--neon-red); box-shadow: 0 0 20px var(--neon-red); }
+        .hex-container.vaccine:hover { background: var(--neon-green); box-shadow: 0 0 20px var(--neon-green); }
+        .hex-container.gold:hover { background: var(--neon-gold); box-shadow: 0 0 20px var(--neon-gold); }
+        .cyber-card {
+            background: var(--panel-bg);
+            border: 1px solid rgba(0, 242, 255, 0.15);
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+        .cyber-card:hover { border-color: var(--neon-blue); transform: translateY(-5px); box-shadow: 0 10px 30px -10px rgba(0,242,255,0.3); }
+        .btn-digi {
+            background: linear-gradient(90deg, transparent, rgba(0, 242, 255, 0.1), transparent);
+            border: 1px solid var(--neon-blue);
+            color: var(--neon-blue);
+            padding: 12px 36px;
+            font-family: 'Orbitron', sans-serif;
+            text-transform: uppercase;
+            font-weight: bold;
+            letter-spacing: 2px;
+            transition: 0.3s;
+            clip-path: polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px);
+        }
+        .btn-digi:hover { background: var(--neon-blue); color: #000; box-shadow: 0 0 25px var(--neon-blue); }
+        .btn-digi.red { border-color: var(--neon-red); color: var(--neon-red); background: linear-gradient(90deg, transparent, rgba(255,0,60,0.1), transparent); }
+        .btn-digi.red:hover { background: var(--neon-red); color: #fff; box-shadow: 0 0 25px var(--neon-red); }
+        #particles { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+        .cyber-glitch { position: relative; }
+        .cyber-glitch::before {
+            content: attr(data-text);
+            position: absolute;
+            left: -2px; text-shadow: 1px 0 var(--neon-red);
+            top: 0; color: white; background: var(--bg-space);
+            overflow: hidden; clip-path: inset(0 90% 0 0);
+            animation: noise-anim-2 3s infinite linear alternate-reverse;
+        }
+        @keyframes noise-anim-2 {
+            0% { clip-path: inset(50% 0 30% 0); }
+            20% { clip-path: inset(20% 0 60% 0); }
+            100% { clip-path: inset(10% 0 80% 0); }
+        }
+    </style>
+</head>
+<body class="selection:bg-[#ff003c] selection:text-white">
+    <canvas id="particles"></canvas>
+    <nav class="fixed top-0 w-full z-50 bg-[#05070a]/95 backdrop-blur-md border-b border-white/10 h-20 flex items-center">
+        <div class="max-w-7xl w-full mx-auto px-6 flex justify-between items-center">
+            <div class="flex items-center gap-4 group cursor-pointer">
+                <div class="relative w-12 h-12 flex items-center justify-center">
+                    <div class="absolute inset-0 border-2 border-dashed border-[#ff003c] rounded-full animate-[spin_10s_linear_infinite] group-hover:border-[#ffbf00] transition-colors"></div>
+                    <svg class="w-8 h-8 text-[#ff003c] group-hover:text-[#ffbf00] transition-colors drop-shadow-[0_0_5px_rgba(255,0,60,0.8)]" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M19.5 13.5L12 21L4.5 13.5" stroke="currentColor" stroke-width="2"/>
+                        <path d="M12 3V17" stroke="currentColor" stroke-width="2"/>
+                        <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="font-cyber font-black text-xl tracking-wider text-white">RED<span class="text-[#ff003c] group-hover:text-[#ffbf00] transition-colors">COMUNISTA</span></h1>
+                    <p class="font-data text-[10px] text-gray-400">NODO: CHILE_SUR // ESTADO: ACTIVO</p>
+                </div>
+            </div>
+            <div class="hidden md:flex gap-8 font-cyber text-xs font-bold tracking-widest text-gray-400">
+                <a href="#init" class="hover:text-[#00f2ff]">[01] INICIO</a>
+                <a href="#teoria" class="hover:text-[#00f2ff]">[02] TEORÍA</a>
+                <a href="#database" class="hover:text-[#ff003c]">[03] ARCHIVO</a>
+            </div>
+            <div class="flex items-center gap-2 px-3 py-1 border border-[#00ff9d] text-[#00ff9d] text-[10px] font-data bg-[#00ff9d]/10 rounded-sm">
+                <div class="w-2 h-2 bg-[#00ff9d] rounded-full animate-pulse"></div>
+                SIGNAL: STRONG
+            </div>
+        </div>
+    </nav>
+
+    <section id="init" class="min-h-screen flex items-center justify-center relative pt-20">
+        <div class="max-w-6xl mx-auto px-4 grid md:grid-cols-2 gap-16 items-center relative z-10">
+            <div>
+                <div class="inline-flex items-center gap-2 mb-6 text-[#ff003c] font-data text-sm border border-[#ff003c]/50 px-4 py-2 rounded-sm bg-[#ff003c]/10">
+                    <i class="ph-bold ph-warning-octagon text-lg"></i>
+                    <span class="font-bold tracking-wider">ALERTA: CAPITALISMO TARDÍO</span>
+                </div>
+                <h1 class="text-6xl md:text-8xl font-cyber font-black leading-none mb-8 cyber-glitch" data-text="REWRITE">
+                    HACKEA <br>
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#ff003c] via-[#ffbf00] to-[#00f2ff]">EL CÓDIGO</span>
+                </h1>
+                <p class="text-xl text-gray-200 font-medium mb-10 max-w-lg border-l-4 border-[#ff003c] pl-6 leading-relaxed">
+                    El marxismo-leninismo es el <strong class="text-[#00f2ff]">código fuente</strong> para desbuguear la explotación.
+                </p>
+                <div class="flex flex-wrap gap-6">
+                    <a href="#teoria" class="btn-digi">CARGAR TEORÍA</a>
+                    <a href="#database" class="btn-digi red">ARCHIVO CHILE</a>
+                </div>
+            </div>
+            <div class="flex items-center justify-center relative">
+                <div class="relative w-[400px] h-[400px] flex items-center justify-center">
+                    <div class="absolute inset-0 border-2 border-dashed border-[#00f2ff]/30 rounded-full animate-[spin_20s_linear_infinite]"></div>
+                    <div class="absolute inset-[10%] border-2 border-dotted border-[#ff003c]/30 rounded-full animate-[spin_15s_linear_infinite_reverse]"></div>
+                    <div class="absolute inset-[20%] border border-[#ffbf00]/30 rounded-full animate-[spin_10s_linear_infinite]"></div>
+                    <div class="relative z-10 w-40 h-40 bg-[#0a1525] border-4 border-[#ff003c] rounded-full flex items-center justify-center shadow-[0_0_50px_rgba(255,0,60,0.5)]">
+                        <svg class="w-20 h-20 text-[#ff003c] drop-shadow-[0_0_10px_currentColor]" viewBox="0 0 24 24" fill="none">
+                            <path d="M19.5 13.5L12 21L4.5 13.5" stroke="currentColor" stroke-width="2"/>
+                            <path d="M12 3V17" stroke="currentColor" stroke-width="2"/>
+                            <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECCIÓN 2: TEORÍA EXPANDIDA -->
+    <section id="teoria" class="py-32 relative border-t border-white/5 bg-[#080b10]">
+        <div class="max-w-7xl mx-auto px-4 relative z-10">
+            <div class="text-center mb-24">
+                <h2 class="text-4xl md:text-6xl font-cyber font-black text-white mb-4">ÁRBOL <span class="text-[#00f2ff]">TECNOLÓGICO</span> POLÍTICO</h2>
+                <p class="text-xl font-rajdhani text-gray-400 max-w-3xl mx-auto">Para hackear el sistema, primero debes entender su arquitectura.</p>
+            </div>
+
+            <!-- NIVEL 1: FUNDAMENTOS (Marx) -->
+            <div class="mb-16">
+                <h3 class="font-cyber text-2xl text-[#00f2ff] mb-8 text-center">/// MÓDULO 1: KARL MARX (EL KERNEL ORIGINAL)</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="cyber-card p-5 rounded-lg group cursor-pointer hover:bg-[#0a1525]" onclick="openDigiModal('materialismo')">
+                        <div class="hex-container mx-auto mb-4"><i class="ph-duotone ph-cube text-3xl text-[#00f2ff]"></i></div>
+                        <h4 class="font-cyber text-lg font-bold text-white">Materialismo Dialéctico</h4>
+                    </div>
+                    <div class="cyber-card p-5 rounded-lg group cursor-pointer hover:bg-[#0a1525]" onclick="openDigiModal('plusvalia')">
+                        <div class="hex-container mx-auto mb-4"><i class="ph-duotone ph-coin-vertical text-3xl text-[#00f2ff]"></i></div>
+                        <h4 class="font-cyber text-lg font-bold text-white">Plusvalía</h4>
+                    </div>
+                    <div class="cyber-card p-5 rounded-lg group cursor-pointer hover:bg-[#0a1525]" onclick="openDigiModal('的历史唯物ismo')">
+                        <div class="hex-container mx-auto mb-4"><i class="ph-duotone ph-scroll text-3xl text-[#00f2ff]"></i></div>
+                        <h4 class="font-cyber text-lg font-bold text-white">Materialismo Histórico</h4>
+                    </div>
+                    <div class="cyber-card p-5 rounded-lg group cursor-pointer hover:bg-[#0a1525]" onclick="openDigiModal('fetichismo')">
+                        <div class="hex-container mx-auto mb-4"><i class="ph-duotone ph-ghost text-3xl text-[#00f2ff]"></i></div>
+                        <h4 class="font-cyber text-lg font-bold text-white">Fetichismo de la Mercancía</h4>
+                    </div>
+                </div>
+            </div>
+
+            <!-- NIVEL 2: LENIN (EL COMPILADOR) -->
+            <div class="mb-16">
+                <h3 class="font-cyber text-2xl text-[#ff003c] mb-8 text-center">/// MÓDULO 2: LENIN (LA IMPLEMENTACIÓN)</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="cyber-card p-5 rounded-lg group cursor-pointer hover:bg-[#1a0a10]" onclick="openDigiModal('imperialismo')">
+                        <div class="hex-container virus mx-auto mb-4"><i class="ph-duotone ph-globe-hemisphere-west text-3xl text-[#ff003c]"></i></div>
+                        <h4 class="font-cyber text-lg font-bold text-white">Imperialismo</h4>
+                    </div>
+                    <div class="cyber-card p-5 rounded-lg group cursor-pointer hover:bg-[#1a0a10]" onclick="openDigiModal('estado')">
+                        <div class="hex-container virus mx-auto mb-4"><i class="ph-duotone ph-bank text-3xl text-[#ff003c]"></i></div>
+                        <h4 class="font-cyber text-lg font-bold text-white">Estado y Revolución</h4>
+                    </div>
+                    <div class="cyber-card p-5 rounded-lg group cursor-pointer hover:bg-[#1a0a10]" onclick="openDigiModal('vanguardia')">
+                        <div class="hex-container virus mx-auto mb-4"><i class="ph-duotone ph-star-four text-3xl text-[#ff003c]"></i></div>
+                        <h4 class="font-cyber text-lg font-bold text-white">Partido de Vanguardia</h4>
+                    </div>
+                    <div class="cyber-card p-5 rounded-lg group cursor-pointer hover:bg-[#1a0a10]" onclick="openDigiModal('quehacer')">
+                        <div class="hex-container virus mx-auto mb-4"><i class="ph-duotone ph-list-checks text-3xl text-[#ff003c]"></i></div>
+                        <h4 class="font-cyber text-lg font-bold text-white">¿Qué Hacer?</h4>
+                    </div>
+                </div>
+            </div>
+
+            <!-- NIVEL 3: STALIN (LA CONSOLIDACIÓN) -->
+            <div class="mb-16">
+                <h3 class="font-cyber text-2xl text-[#ffbf00] mb-8 text-center">/// MÓDULO 3: STALIN (LA CONSOLIDACIÓN)</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="cyber-card p-5 rounded-lg group cursor-pointer hover:bg-[#1a150a]" onclick="openDigiModal('socialismo_pais')">
+                        <div class="hex-container gold mx-auto mb-4"><i class="ph-duotone ph-flag text-3xl text-[#ffbf00]"></i></div>
+                        <h4 class="font-cyber text-lg font-bold text-white">Socialismo en un Solo País</h4>
+                    </div>
+                    <div class="cyber-card p-5 rounded-lg group cursor-pointer hover:bg-[#1a150a]" onclick="openDigiModal('construccion_socialismo')">
+                        <div class="hex-container gold mx-auto mb-4"><i class="ph-duotone ph-hammer text-3xl text-[#ffbf00]"></i></div>
+                        <h4 class="font-cyber text-lg font-bold text-white">Construcción del Socialismo</h4>
+                    </div>
+                    <div class="cyber-card p-5 rounded-lg group cursor-pointer hover:bg-[#1a150a]" onclick="openDigiModal('cuestion_nacional')">
+                        <div class="hex-container gold mx-auto mb-4"><i class="ph-duotone ph-globe text-3xl text-[#ffbf00]"></i></div>
+                        <h4 class="font-cyber text-lg font-bold text-white">Cuestión Nacional</h4>
+                    </div>
+                </div>
+            </div>
+
+            <!-- NIVEL 4: AUTORES CHILENOS DEL PC -->
+            <div>
+                <h3 class="font-cyber text-2xl text-[#00ff9d] mb-8 text-center">/// MÓDULO 4: PC CHILE (LA APLICACIÓN)</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="cyber-card p-5 rounded-lg group cursor-pointer hover:bg-[#0a1a15]" onclick="openDigiModal('recabarren')">
+                        <div class="hex-container vaccine mx-auto mb-4"><i class="ph-duotone ph-newspaper-clipping text-3xl text-[#00ff9d]"></i></div>
+                        <h4 class="font-cyber text-lg font-bold text-white">Luis E. Recabarren</h4>
+                    </div>
+                    <div class="cyber-card p-5 rounded-lg group cursor-pointer hover:bg-[#0a1a15]" onclick="openDigiModal('galleguillos')">
+                        <div class="hex-container vaccine mx-auto mb-4"><i class="ph-duotone ph-users text-3xl text-[#00ff9d]"></i></div>
+                        <h4 class="font-cyber text-lg font-bold text-white">Baltazar Galleguillos</h4>
+                    </div>
+                    <div class="cyber-card p-5 rounded-lg group cursor-pointer hover:bg-[#0a1a15]" onclick="openDigiModal('corvalan')">
+                        <div class="hex-container vaccine mx-auto mb-4"><i class="ph-duotone ph-book-open-text text-3xl text-[#00ff9d]"></i></div>
+                        <h4 class="font-cyber text-lg font-bold text-white">Luis Corvalán</h4>
+                    </div>
+                    <div class="cyber-card p-5 rounded-lg group cursor-pointer hover:bg-[#0a1a15]" onclick="openDigiModal('alvarez')">
+                        <div class="hex-container vaccine mx-auto mb-4"><i class="ph-duotone ph-megaphone text-3xl text-[#00ff9d]"></i></div>
+                        <h4 class="font-cyber text-lg font-bold text-white">Volodia Teitelboim</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="database" class="py-32 relative border-t border-white/5 bg-[#05070a]">
+        <div class="max-w-7xl mx-auto px-4 relative z-10">
+            <div class="mb-20">
+                <h2 class="text-4xl md:text-6xl font-cyber font-black text-white mb-4">ARCHIVO <span class="text-[#ff003c]">CHILE_ROOT</span></h2>
+                <p class="font-rajdhani text-xl text-gray-400">Registro histórico de los intentos de hackeo al sistema.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="cyber-card p-6 rounded-lg group cursor-pointer hover:bg-[#0a1525]" onclick="openDigiModal('recabarren')">
+                    <div class="flex justify-between items-start mb-6">
+                        <div class="hex-container group-hover:bg-[#00f2ff]/20"><i class="ph-duotone ph-newspaper-clipping text-4xl text-[#00f2ff]"></i></div>
+                        <div class="text-right"><span class="block font-cyber text-lg font-bold text-white">RECABARREN</span><span class="block font-data text-xs text-[#00f2ff]">ROL: FUNDADOR</span></div>
+                    </div>
+                    <div class="h-1 w-full bg-gray-800 rounded overflow-hidden"><div class="h-full bg-[#00f2ff] w-[100%]"></div></div>
+                </div>
+                <div class="cyber-card p-6 rounded-lg group cursor-pointer hover:bg-[#1a150a]" onclick="openDigiModal('frente_popular')">
+                    <div class="flex justify-between items-start mb-6">
+                        <div class="hex-container gold group-hover:bg-[#ffbf00]/20"><i class="ph-duotone ph-handshake text-4xl text-[#ffbf00]"></i></div>
+                        <div class="text-right"><span class="block font-cyber text-lg font-bold text-white">FRENTE POP.</div>
+                    </div>
+                    <div class="h-1 w-full bg-gray-800 rounded overflow-hidden"><div class="h-full bg-[#ffbf00] w-[70%]"></div></div>
+                </div>
+                <div class="cyber-card p-6 rounded-lg group cursor-pointer hover:bg-[#1a0a10]" onclick="openDigiModal('up_1970')">
+                    <div class="flex justify-between items-start mb-6">
+                        <div class="hex-container virus group-hover:bg-[#ff003c]/20"><i class="ph-duotone ph-rocket-launch text-4xl text-[#ff003c]"></i></div>
+                        <div class="text-right"><span class="block font-cyber text-lg font-bold text-white">UNIDAD POP.</div>
+                    </div>
+                    <div class="h-1 w-full bg-gray-800 rounded overflow-hidden"><div class="h-full bg-[#ff003c] w-[90%]"></div></div>
+                </div>
+                <div class="cyber-card p-6 rounded-lg group cursor-pointer hover:bg-[#1a0a0a] border-red-900/50" onclick="openDigiModal('golpe_73')">
+                    <div class="flex justify-between items-start mb-6">
+                        <div class="hex-container bg-red-900/20 group-hover:bg-red-900/40 border-red-700"><i class="ph-duotone ph-skull text-4xl text-red-600"></i></div>
+                        <div class="text-right"><span class="block font-cyber text-lg font-bold text-red-500">SYSTEM CRASH</span></div>
+                    </div>
+                    <div class="h-1 w-full bg-gray-800 rounded overflow-hidden"><div class="h-full bg-red-700 w-[100%]"></div></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div id="digi-modal" class="fixed inset-0 bg-black/90 backdrop-blur-xl z-[100] hidden items-center justify-center p-4">
+        <div class="bg-[#0a0f18] border w-full max-w-5xl h-[85vh] flex flex-col md:flex-row relative overflow-hidden rounded-lg" id="modal-container">
+            <button onclick="closeDigiModal()" class="absolute top-6 right-6 text-gray-400 hover:text-white z-50"><i class="ph-bold ph-x-circle text-4xl"></i></button>
+            <div class="w-full md:w-1/3 bg-[#05070a] border-b md:border-b-0 md:border-r p-12 text-center">
+                <div id="modal-icon" class="text-9xl mb-8"></div>
+                <h3 id="modal-title" class="font-cyber text-3xl font-black text-white mb-4 tracking-wider"></h3>
+                <span id="modal-type" class="font-data text-xs border px-4 py-1.5 rounded uppercase tracking-widest"></span>
+            </div>
+            <div class="w-full md:w-2/3 p-8 md:p-12 overflow-y-auto">
+                <p id="modal-text" class="font-rajdhani text-lg text-gray-200 leading-relaxed whitespace-pre-line mb-8"></p>
+                <div class="border-l-4 p-6 rounded-r-lg"><p id="modal-quote" class="font-rajdhani italic text-xl text-white leading-relaxed"></p></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const db = {
+            // --- MARX ---
+            'materialismo': { title: 'MATERIALISMO DIALÉCTICO', type: 'KERNEL', color: '#00f2ff', icon: '<i class="ph-duotone ph-cube"></i>', text: 'El sistema operativo base. La realidad no es estática, es un video en movimiento impulsado por contradicciones. Todo sistema genera las condiciones para su propia obsolescencia.', quote: '"No es la conciencia la que determina el ser, sino el ser social." - Marx' },
+            'plusvalia': { title: 'PLUSVALÍA', type: 'EXPLOIT', color: '#00f2ff', icon: '<i class="ph-duotone ph-coin-vertical"></i>', text: 'El bug fundamental del capitalismo. Trabajas 8 horas, las primeras 2 cubren tu salario. Las otras 6 son gratis para el patrón.', quote: '"El capital es trabajo muerto que chupa trabajo vivo." - Marx' },
+            'historico': { title: 'MATERIALISMO HISTÓRICO', type: 'ANALYSIS', color: '#00f2ff', icon: '<i class="ph-duotone ph-scroll"></i>', text: 'Método para descifrar la historia. Las fuerzas productivas determinan las relaciones de producción. Cuando las segundas frenan a las primeras, explota la revolución.', quote: '"La humanidad se propone siempre sólo aquellos objetivos que puede alcanzar." - Marx' },
+            'fetichismo': { title: 'FETICHISMO DE LA MERCANCÍA', type: 'LOGIC', color: '#00f2ff', icon: '<i class="ph-duotone ph-ghost"></i>', text: 'El mercado hace invisible el trabajo humano detrás de los productos. Las relaciones entre personas se disfrazan de relaciones entre cosas.', quote: '"A first glance, una mercancia parece una cosa trivial, de comprensión inmediata. Su análisis demuestra que es una cosa endiabladamente complicada." - Marx' },
+            // --- LENIN ---
+            'imperialismo': { title: 'IMPERIALISMO', type: 'SYSTEM_ANALYSIS', color: '#ff003c', icon: '<i class="ph-duotone ph-globe-hemisphere-west"></i>', text: 'Fase superior del capitalismo. Los monopolios dominan la economía. La exportación de capitales reemplaza la exportación de mercancías. El mundo se divide entre potencias colonialistas.', quote: '"El imperialismo es la fase monopolista del capitalismo." - Lenin' },
+            'estado': { title: 'ESTADO Y REVOLUCIÓN', type: 'OVERWRITE', color: '#ff003c', icon: '<i class="ph-duotone ph-bank"></i>', text: 'No es neutral. Es herramienta de dominación de clase. Hay que desmantelarla y construir la nuestra.', quote: '"El Estado es órgano de dominación de clase." - Lenin' },
+            'vanguardia': { title: 'PARTIDO DE VANGUARDIA', type: 'COMMAND', color: '#ffbf00', icon: '<i class="ph-duotone ph-star-four"></i>', text: 'La rabia espontánea no basta. Se necesita disciplina y comprensión clara de la teoría. La vanguardia es la parte más consciente de la clase.', quote: '"Organización de revolucionarios." - Lenin' },
+            'quehacer': { title: '¿QUÉ HACER?', type: 'STRATEGY', color: '#ff003c', icon: '<i class="ph-duotone ph-list-checks"></i>', text: 'La espontaneidad del movimiento obrero sola lleva a la colaboración de clases. Se necesita organización revolucionaria externa para elevar la conciencia.', quote: '"Sin teoría revolucionaria, no puede haber movimiento revolucionario." - Lenin' },
+            // --- STALIN ---
+            'socialismo_pais': { title: 'SOCIALISMO EN UN SOLO PAÍS', type: 'THEORY', color: '#ffbf00', icon: '<i class="ph-duotone ph-flag"></i>', text: 'Stalin desarrolló la tesis de que el socialismo puede victoriosamente construirse en un solo país, mientras exista un equilibrio de fuerzas mundial.', quote: '"La construcción del socialismo en un solo país es completamente posible." - Stalin' },
+            'construccion': { title: 'CONSTRUCCIÓN DEL SOCIALISMO', type: 'PRACTICE', color: '#ffbf00', icon: '<i class="ph-duotone ph-hammer"></i>', text: 'Industrialización planificada, colectivización de la agricultura, transformación cultural. El Estado obrero debe defenderse mientras construye las bases del comunismo.', quote: '"El socialismno se construye con el sudor y el esfuerzo de los trabajadores." - Stalin' },
+            'cuestion_nacional': { title: 'CUESTIÓN NACIONAL', type: 'POLICY', color: '#ffbf00', icon: '<i class="ph-duotone ph-globe"></i>', text: 'El derecho de las naciones a la autodeterminación. Stalin analizó las diferentes formas de naciones y desarrolló la política de acercamiento entre pueblos.', quote: '"Las naciones tienen derecho a decidir su propio destino." - Stalin' },
+            // --- CHILE PC ---
+            'recabarren': { title: 'LUIS E. RECABARREN', type: 'FUNDADOR', color: '#00ff9d', icon: '<i class="ph-duotone ph-newspaper-clipping"></i>', text: 'Padre del comunismo chileno. Fundó periódicos obreros, sindicatos y despertó la conciencia de clase en el norte salitrero. Laautoeducación como herramienta de liberación.', quote: '"Emancipación de los trabajadores debe ser obra de los trabajadores mismos."' },
+            'galleguillos': { title: 'BALTASAR GALLEGUILLOS', type: 'LÍDER OBRERO', color: '#00ff9d', icon: '<i class="ph-duotone ph-users"></i>', text: 'Dirigente sindical del salitre. Fundador del Partido Comunista de Chile en 1922. Lideró las grandes huelgas del Norte Grande contra la explotación.', quote: '"La organización es el arma del proletariado."' },
+            'corvalan': { title: 'LUIS CORVALÁN', type: 'SECRETARIO GENERAL', color: '#00ff9d', icon: '<i class="ph-duotone ph-book-open-text"></i>', text: 'Líder intelectual del PC Chile. Escogido en 1954. Defendió el camino pacífico al socialismo en el contexto chileno. Gran teórico de la unidad popular.', quote: '"La democracia verdadera se construye con el pueblo."' },
+            'alvarez': { title: 'VOLODIA TEITELBOIM', type: 'INTelectual', color: '#00ff9d', icon: '<i class="ph-duotone ph-megaphone"></i>', text: 'Secretario General del PC durante la clandestinidad. Sobreviviente del incendio de la Casa de la Moneda. Gran escritor y divulgador de la doctrina marxista-leninista.', quote: '"El comunismo es la juventud del mundo."' },
+            // --- ARCHIVO ---
+            'clases': { title: 'LUCHA DE CLASES', type: 'ENGINE', color: '#ff003c', icon: '<i class="ph-duotone ph-users-three"></i>', text: 'No es error, es el motor. Patricios/plebeyos, señores/siervos, burgueses/proletarios. En Chile hoy: quienes viven de su trabajo vs quienes viven del trabajo ajeno.', quote: '"Historia de toda sociedad hasta hoy: lucha de clases." - Manifiesto' },
+            'poder_popular': { title: 'PODER POPULAR', type: 'NETWORK', color: '#00ff9d', icon: '<i class="ph-duotone ph-hand-fist"></i>', text: 'Construir el nuevo sistema en paralelo. Asambleas territoriales, sindicatos combativos, ollas comunes: nodos de una red descentralizada.', quote: '"El poder popular no se decreta, se construye."' },
+            'frente_popular': { title: 'FRENTE POPULAR', type: 'ALIANZA', color: '#ffbf00', icon: '<i class="ph-duotone ph-handshake"></i>', text: '1938: Primera alianza de gobierno. Táctica antifascista que abrió espacio político.', quote: '"Gobernar es educar."' },
+            'up_1970': { title: 'UNIDAD POPULAR', type: 'REWRITE', color: '#ff003c', icon: '<i class="ph-duotone ph-rocket-launch"></i>', text: '1970: Intento de construir socialismo por vía institucional. Nacionalización, reforma agraria, leche para todos.', quote: '"La historia la hacen los pueblos." - Allende' },
+            'golpe_73': { title: 'SYSTEM CRASH', type: 'FATAL', color: '#ff003c', icon: '<i class="ph-duotone ph-skull"></i>', text: '1973: Intervención militar financiada por CIA. Formateo violento del disco duro nacional. 17 años de terrorismo de Estado.', quote: '"El ladrillo." - Base del modelo neoliberal.' },
+            'resistencia': { title: 'RESISTENCIA', type: 'CLANDESTINE', color: '#00ff9d', icon: '<i class="ph-duotone ph-mask-happy"></i>', text: 'Período de organización clandestina tras el golpe. Mantenimiento de redes de solidaridad y difusión.', quote: '"La lucha continúa."' },
+            'gladys': { title: 'GLADYS MARÍN', type: 'VANGUARDIA', color: '#ff003c', icon: '<i class="ph-duotone ph-megaphone"></i>', text: 'Líder que asumió tras el asesinato de secretarios generales. Símbolo de persistencia del PC en la clandestinidad.', quote: '"A la verdad no renuncio."' },
+            'jara': { title: 'VÍCTOR JARA', type: 'CULTURA', color: '#bd00ff', icon: '<i class="ph-duotone ph-music-notes"></i>', text: 'Artista del pueblo. Sus canciones eran propaganda revolucionaria. Su asesinato fue un intento de silenciar la voz popular.', quote: '"Canto porque la guitarra tiene sentido."' },
+            'revuelta_19': { title: 'REVUELTA 2019', type: 'GLITCH', color: '#ffbf00', icon: '<i class="ph-duotone ph-fire"></i>', text: 'Estallido social contra el modelo neoliberal. Demostró que el sistema sigue generando desigualdad.', quote: '"No son 30 pesos, son 30 años."' }
+        };
+
+        function openDigiModal(id) {
+            const d = db[id];
+            const m = document.getElementById('digi-modal');
+            const c = document.getElementById('modal-container');
+            document.getElementById('modal-title').innerText = d.title;
+            document.getElementById('modal-type').innerText = d.type;
+            document.getElementById('modal-text').innerText = d.text;
+            document.getElementById('modal-quote').innerText = d.quote;
+            document.getElementById('modal-icon').innerHTML = d.icon;
+            c.style.borderColor = d.color;
+            c.style.boxShadow = `0 0 50px ${d.color}33`;
+            document.getElementById('modal-icon').style.color = d.color;
+            document.getElementById('modal-icon').style.dropShadow = `0 0 30px ${d.color}`;
+            document.getElementById('modal-type').style.borderColor = d.color;
+            document.getElementById('modal-type').style.color = d.color;
+            m.classList.remove('hidden');
+            m.classList.add('flex');
+        }
+        function closeDigiModal() {
+            document.getElementById('digi-modal').classList.add('hidden');
+            document.getElementById('digi-modal').classList.remove('flex');
+        }
+
+        // Particles
+        const canvas = document.getElementById('particles');
+        const ctx = canvas.getContext('2d');
+        let width, height, particles = [];
+        function resize() { width = canvas.width = window.innerWidth; height = canvas.height = window.innerHeight; }
+        window.addEventListener('resize', resize);
+        resize();
+        class P {
+            constructor() { this.x = Math.random() * width; this.y = Math.random() * height; this.size = Math.random() * 1.5; this.sx = (Math.random() - 0.5) * 0.3; this.sy = (Math.random() - 0.5) * 0.3; this.c = ['#00f2ff', '#ff003c', '#ffbf00', '#00ff9d'][Math.floor(Math.random() * 4)]; }
+            update() { this.x += this.sx; this.y += this.sy; if (this.x > width) this.x = 0; if (this.x < 0) this.x = width; if (this.y > height) this.y = 0; if (this.y < 0) this.y = height; }
+            draw() { ctx.fillStyle = this.c; ctx.globalAlpha = 0.5; ctx.fillRect(this.x, this.y, this.size, this.size); ctx.globalAlpha = 1; }
+        }
+        for (let i = 0; i < 150; i++) particles.push(new P());
+        function anim() { ctx.clearRect(0, 0, width, height); particles.forEach(p => { p.update(); p.draw(); }); requestAnimationFrame(anim); }
+        anim();
+    </script>
+</body>
+</html>
